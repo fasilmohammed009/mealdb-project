@@ -3,24 +3,36 @@ import './App.css'
 import Headers from './components/Header';
 import Home from './pages/Home';
 import CategoryMeals from './pages/CategoryMeals';
-import MealDetail from './pages/MealDetails';
 import MealDetails from './pages/MealDetails';
 import Favorites from './pages/Favorites';
 import SearchResult from './pages/SearchResult';
 import { FavoritesProvider } from './contexts/FavoritesContext';
 import SearchByArea from './pages/SearchByArea';
+import ProtectedRoute from './components/ProtectedRoute';
+import Login from './pages/Login';
 const App = () => {
   return (
     <BrowserRouter >
     <FavoritesProvider>
      <Headers />
      <Routes>
-      <Route path="/" element={<Home />} /> 
-      <Route path={`/categoryy/:category`} element={<CategoryMeals/>} />
-      <Route path={`/meal/:id`} element= {<MealDetails/>} />
-      <Route path={`/favorites`} element= {<Favorites/>} />
-      <Route path={`/search`} element={<SearchResult/>} />
-      <Route path={`/search-area`} element={<SearchByArea/>} />
+      {/* PUBLIC ROUTE */}
+          <Route path="/login" element={<Login />} />
+
+          {/* PROTECTED ROUTES */}
+       <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+      <Route path={`/categoryy/:category`} element={<ProtectedRoute><CategoryMeals/></ProtectedRoute>} />
+      <Route path={`/meal/:id`} element= {<ProtectedRoute><MealDetails/></ProtectedRoute>} />
+      <Route path={`/favorites`} element= {<ProtectedRoute><Favorites/></ProtectedRoute>} />
+      <Route path={`/search`} element={<ProtectedRoute><SearchResult/></ProtectedRoute>} />
+      <Route path={`/search-area`} element={<ProtectedRoute><SearchByArea/></ProtectedRoute>} />
       <Route path=  "*" element={<h1 className='text-center mt-20 text-5xl  text-red-700'>404 Page Not found</h1>} />
      </Routes>
      </FavoritesProvider>

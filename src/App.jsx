@@ -10,6 +10,7 @@ import { FavoritesProvider } from './contexts/FavoritesContext';
 import SearchByArea from './pages/SearchByArea';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
+import Signup from './pages/SignUp';
 const App = () => {
   return (
     <BrowserRouter >
@@ -18,6 +19,7 @@ const App = () => {
      <Routes>
       {/* PUBLIC ROUTE */}
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
 
           {/* PROTECTED ROUTES */}
        <Route

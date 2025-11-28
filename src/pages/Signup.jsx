@@ -1,52 +1,38 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  signInWithEmailAndPassword,
-  signInWithPopup
-} from "firebase/auth";
-import { auth, googleProvider } from "../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
 import { Link } from "react-router-dom";
 
-const Login = () => {
+const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");   // toast message state
+  const [errorMsg, setErrorMsg] = useState(""); 
   const navigate = useNavigate();
 
+  
   // 🔥 Show error toast function
   const showError = (msg) => {
     setErrorMsg(msg);
     setTimeout(() => setErrorMsg(""), 3000); // hide after 3 sec
   };
 
-  const handleEmailLogin = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
 
-    // 🔥 Front-end validation
     if (!email.trim() || !password.trim()) {
       showError("Email & Password cannot be empty");
       return;
     }
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      localStorage.setItem("auth", "true");
-      window.dispatchEvent(new Event("storage"));
-      navigate("/");
-    } catch (error) {
-      console.log(error);
-      showError("Invalid email or password");
-    }
-  };
+      await createUserWithEmailAndPassword(auth, email, password);
 
-  const handleGoogleLogin = async () => {
-    try {
-      await signInWithPopup(auth, googleProvider);
-      localStorage.setItem("auth", "true");
-      navigate("/");
+      alert("Account Created Successfully!");
+      navigate("/login"); 
     } catch (error) {
       console.log(error);
-      showError("Google Login Failed");
+      alert(error.code);
     }
   };
 
@@ -54,22 +40,23 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-orange-100 to-red-100 px-4">
       <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl">
 
+        {/* Header */}
         <h1 className="text-3xl font-bold text-center text-red-600">
-          Welcome to MealDB 🍽️
+          Create Your MealDB Account 🍽️
         </h1>
         <p className="text-center text-gray-600 mt-1 mb-6">
-          Login to explore delicious meals!
+          Join us & explore thousands of recipes!
         </p>
 
-        {/* 🔥 Error Toast */}
-        {errorMsg && (
+         {errorMsg && (
           <div className="bg-red-100 text-red-700 p-3 rounded mb-4 text-center font-semibold">
             {errorMsg}
           </div>
         )}
 
-        <form onSubmit={handleEmailLogin}>
 
+        <form onSubmit={handleSignup}>
+          {/* Email Input */}
           <label className="block mb-2 font-semibold text-gray-700">Email</label>
           <input
             type="email"
@@ -81,44 +68,29 @@ const Login = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
 
+          {/* Password Input */}
           <label className="block mb-2 font-semibold text-gray-700">Password</label>
           <input
             type="password"
             className={`border p-3 w-full rounded-lg focus:ring-2 outline-none mb-6 ${
               errorMsg && !password ? "border-red-500" : "focus:ring-red-300"
             }`}
-            placeholder="Enter your password"
+            placeholder="Enter a password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
 
+          {/* Signup Button */}
           <button className="bg-red-600 hover:bg-red-700 transition text-white py-3 w-full rounded-lg font-semibold text-lg">
-            Login
+            Create Account
           </button>
         </form>
 
-        <div className="flex items-center my-5">
-          <div className="flex-1 h-px bg-gray-300"></div>
-          <span className="px-4 text-gray-500 font-semibold">OR</span>
-          <div className="flex-1 h-px bg-gray-300"></div>
-        </div>
-
-        <button
-          onClick={handleGoogleLogin}
-          className="flex items-center justify-center gap-3 bg-white border border-gray-300 py-3 w-full rounded-lg hover:bg-gray-50 transition"
-        >
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png"
-            className="w-6 h-6"
-            alt="google"
-          />
-          <span className="font-semibold">Continue with Google</span>
-        </button>
-
+        {/* Login Link */}
         <p className="text-center mt-6">
-          Don't have an account?{" "}
-         <Link to="/signup" className="text-red-600 font-semibold hover:underline">
-          Sign Up
+          Already have an account?{" "}
+         <Link to="/login" className="text-red-600 font-semibold hover:underline">
+          Login
          </Link>
         </p>
       </div>
@@ -126,4 +98,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;

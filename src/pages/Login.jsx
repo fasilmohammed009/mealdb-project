@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  signInWithEmailAndPassword,
-  signInWithPopup
-} from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "../firebase";
 import { Link } from "react-router-dom";
+import { FiEye, FiEyeOff } from "react-icons/fi";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");   // toast message state
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [errorMsg, setErrorMsg] = useState(""); // toast message state
   const navigate = useNavigate();
 
   // 🔥 Show error toast function
@@ -22,16 +23,30 @@ const Login = () => {
   const handleEmailLogin = async (e) => {
     e.preventDefault();
 
-    // 🔥 Front-end validation
     if (!email.trim() || !password.trim()) {
       showError("Email & Password cannot be empty");
       return;
     }
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      localStorage.setItem("auth", "true");
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      console.log("Logged in user:", user);
+
+      // 🔥 Get Firebase token (JWT)
+      const token = await user.getIdToken();
+
+      // Save token to localStorage (advanced)
+      localStorage.setItem("authToken", token);
+      localStorage.setItem("userEmail", user.email);
+
+      // Trigger header update
       window.dispatchEvent(new Event("storage"));
+
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -41,8 +56,16 @@ const Login = () => {
 
   const handleGoogleLogin = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
-      localStorage.setItem("auth", "true");
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      console.log("Google logged in user:", user);
+
+      const token = await user.getIdToken();
+
+      localStorage.setItem("authToken", token);
+      localStorage.setItem("userEmail", user.email);
+
+      window.dispatchEvent(new Event("storage"));
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -50,10 +73,24 @@ const Login = () => {
     }
   };
 
+  const handleForgotPassword = async () => {
+    if (!email) {
+      showError("Enter your email first");
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+      showError("Password reset email sent!");
+    } catch (err) {
+      console.log(err);
+      showError("Email not found!");
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-orange-100 to-red-100 px-4">
       <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl">
-
         <h1 className="text-3xl font-bold text-center text-red-600">
           Welcome to MealDB 🍽️
         </h1>
@@ -69,8 +106,9 @@ const Login = () => {
         )}
 
         <form onSubmit={handleEmailLogin}>
-
-          <label className="block mb-2 font-semibold text-gray-700">Email</label>
+          <label className="block mb-2 font-semibold text-gray-700">
+            Email
+          </label>
           <input
             type="email"
             className={`border p-3 w-full rounded-lg focus:ring-2 outline-none mb-4 ${
@@ -81,16 +119,33 @@ const Login = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
 
-          <label className="block mb-2 font-semibold text-gray-700">Password</label>
-          <input
-            type="password"
-            className={`border p-3 w-full rounded-lg focus:ring-2 outline-none mb-6 ${
-              errorMsg && !password ? "border-red-500" : "focus:ring-red-300"
-            }`}
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <label className="block mb-2 font-semibold text-gray-700">
+            Password
+          </label>
+          <div className="relative mb-6">
+            <input
+              type={showPassword ? "text" : "password"}
+              className={`border p-3 w-full rounded-lg focus:ring-2 outline-none mb-6 ${
+                errorMsg && !password ? "border-red-500" : "focus:ring-red-300"
+              }`}
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            {/* Eye Icon */}
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-3 cursor-pointer text-gray-600"
+            >
+              {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+            </span>
+          </div>
+          <p
+            onClick={() => handleForgotPassword()}
+            className="text-sm text-center text-blue-600 font-semibold hover:underline cursor-pointer mb-4"
+          >
+            Forgot Password?
+          </p>
 
           <button className="bg-red-600 hover:bg-red-700 transition text-white py-3 w-full rounded-lg font-semibold text-lg">
             Login
@@ -117,9 +172,12 @@ const Login = () => {
 
         <p className="text-center mt-6">
           Don't have an account?{" "}
-         <Link to="/signup" className="text-red-600 font-semibold hover:underline">
-          Sign Up
-         </Link>
+          <Link
+            to="/signup"
+            className="text-red-600 font-semibold hover:underline"
+          >
+            Sign Up
+          </Link>
         </p>
       </div>
     </div>

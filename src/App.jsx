@@ -11,6 +11,7 @@ import SearchByArea from './pages/SearchByArea';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Signup from './pages/SignUp';
+import Dummy from './pages/dummy';
 const App = () => {
   return (
     <BrowserRouter >
@@ -20,6 +21,7 @@ const App = () => {
       {/* PUBLIC ROUTE */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path ="dummy" element={<Dummy/>}></Route>
 
           {/* PROTECTED ROUTES */}
        <Route

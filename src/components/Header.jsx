@@ -3,13 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [query, setQuery] = useState("");
-  const [isAuth, setIsAuth] = useState(() => localStorage.getItem("auth") === "true");
+  const [isAuth, setIsAuth] = useState(() => !!localStorage.getItem("authToken"));
   const navigate = useNavigate();
 
   // 🔥 Listen for login/logout changes (custom event)
   useEffect(() => {
     const handleStorageChange = () => {
-      setIsAuth(localStorage.getItem("auth") === "true");
+      setIsAuth(!!localStorage.getItem("authToken")); // ✅ correct token check
     };
 
     window.addEventListener("storage", handleStorageChange);
@@ -24,9 +24,10 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("auth");
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userEmail");
 
-    // 🔥 Trigger auth update across app
+    // 🔥 Trigger header update
     window.dispatchEvent(new Event("storage"));
 
     setIsAuth(false);
@@ -57,7 +58,7 @@ const Header = () => {
           </button>
         </form>
 
-        {/* 🔥 Auth Buttons */}
+        {/* Auth Buttons */}
         {isAuth ? (
           <button
             onClick={handleLogout}

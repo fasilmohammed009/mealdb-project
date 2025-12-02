@@ -3,11 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import { Link } from "react-router-dom";
-
+import { FiEye, FiEyeOff } from "react-icons/fi";
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState(""); 
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   
@@ -70,8 +71,9 @@ const Signup = () => {
 
           {/* Password Input */}
           <label className="block mb-2 font-semibold text-gray-700">Password</label>
+          <div className="relative mb-6">
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             className={`border p-3 w-full rounded-lg focus:ring-2 outline-none mb-6 ${
               errorMsg && !password ? "border-red-500" : "focus:ring-red-300"
             }`}
@@ -79,6 +81,13 @@ const Signup = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+           <span
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-3 cursor-pointer text-gray-600"
+                      >
+                        {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                      </span>
+                      </div>
 
           {/* Signup Button */}
           <button className="bg-red-600 hover:bg-red-700 transition text-white py-3 w-full rounded-lg font-semibold text-lg">

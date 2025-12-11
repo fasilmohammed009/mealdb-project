@@ -42,10 +42,11 @@ export const FavoritesProvider = ({children}) => {
 };
 
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useFavourites = () => {
     const context = useContext(FavoritesContext);
     if (!context) {
         throw new Error ("Something went wrong")
     }
-    return context;
+    return context ;
 }

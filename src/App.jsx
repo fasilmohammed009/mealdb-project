@@ -12,6 +12,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Signup from './pages/SignUp';
 import Dummy from './pages/dummy';
+import Footer from './components/Footer';
 const App = () => {
   return (
     <BrowserRouter >
@@ -39,6 +40,7 @@ const App = () => {
       <Route path={`/search-area`} element={<ProtectedRoute><SearchByArea/></ProtectedRoute>} />
       <Route path=  "*" element={<h1 className='text-center mt-20 text-5xl  text-red-700'>404 Page Not found</h1>} />
      </Routes>
+     <Footer />
      </FavoritesProvider>
     </BrowserRouter>
   )

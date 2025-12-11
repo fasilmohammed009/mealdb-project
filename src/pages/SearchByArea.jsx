@@ -96,7 +96,7 @@ import { fetchByArea } from "../api/Mealdb";
 import MealCard from "../components/MealCard";
 import LoadingSpinner from "../components/LoadingSpinner";
 
-const AREAS = ["American", "Indian", "Canadian"]; // your fixed dropdown options
+const AREAS = ["American", "Indian", "Canadian","china"]; // your fixed dropdown options
 
 const SearchByArea = () => {
   const [area, setArea] = useState("");

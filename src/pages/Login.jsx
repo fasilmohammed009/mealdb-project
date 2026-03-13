@@ -90,7 +90,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-orange-100 to-red-100 px-4">
-      <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl">
+      <div className="w-full max-w-md bg-white p-4 rounded-2xl shadow-xl">
         <h1 className="text-3xl font-bold text-center text-red-600">
           Welcome to MealDB 🍽️
         </h1>
@@ -98,7 +98,7 @@ const Login = () => {
           Login to explore delicious meals!
         </p>
 
-        {/* 🔥 Error Toast */}
+        {/*  Error Toast */}
         {errorMsg && (
           <div className="bg-red-100 text-red-700 p-3 rounded mb-4 text-center font-semibold">
             {errorMsg}

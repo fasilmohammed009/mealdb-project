@@ -9,12 +9,12 @@ const CategoryMeals = () => {
   const [loading, setLoading]= useState (true);
 
   useEffect(() => {
-    setLoading (true);
+    setLoading(true);
     fetchMealsByCategory(category)
     .then((res) => setMeals(res.data.meals || []))
     .catch((err) => console.log(err))
     .finally(() => setLoading(false));
-  }, []);
+  }, [category]);
 
   if(loading ) return <LoadingSpinner />
   

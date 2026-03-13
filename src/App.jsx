@@ -11,36 +11,61 @@ import SearchByArea from './pages/SearchByArea';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Signup from './pages/SignUp';
-import Dummy from './pages/dummy';
+import Dummy from './pages/UserDetails';
 import Footer from './components/Footer';
+
+
+const Layout = ({children}) => {
+  return (
+     <ProtectedRoute >
+    <div className='flex flex-col min-h-screen justify-between'>
+        {/* <div className='text-center text-gray-500 p-4'>Copyright &copy; 2024 MealDB. All rights reserved.</div> */}
+      
+      <header>
+        <Headers />
+      </header>
+      <main className='container mx-auto px-3 pb-12'>
+        
+        {children}
+      </main>
+      <footer>
+        <Footer />
+      </footer>
+    </div>
+    </ProtectedRoute>
+  )
+}
+
 const App = () => {
   return (
     <BrowserRouter >
     <FavoritesProvider>
-     <Headers />
      <Routes>
       {/* PUBLIC ROUTE */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path ="dummy" element={<Dummy/>}></Route>
+          <Route path ="/user-details" element={
+            <Layout>
+            <Dummy/>
+            </Layout>
+            } />
 
           {/* PROTECTED ROUTES */}
        <Route
             path="/"
             element={
-              <ProtectedRoute>
+                <Layout>
                 <Home />
-              </ProtectedRoute>
+                </Layout>
             }
           />
-      <Route path={`/categoryy/:category`} element={<ProtectedRoute><CategoryMeals/></ProtectedRoute>} />
-      <Route path={`/meal/:id`} element= {<ProtectedRoute><MealDetails/></ProtectedRoute>} />
-      <Route path={`/favorites`} element= {<ProtectedRoute><Favorites/></ProtectedRoute>} />
-      <Route path={`/search`} element={<ProtectedRoute><SearchResult/></ProtectedRoute>} />
-      <Route path={`/search-area`} element={<ProtectedRoute><SearchByArea/></ProtectedRoute>} />
+      <Route path={`/category/:category`} element={<Layout><CategoryMeals/></Layout>} />
+      <Route path={`/meal/:id`} element= {<Layout><MealDetails/></Layout>} />
+      <Route path={`/favorites`} element= {<Layout><Favorites/></Layout>} />
+      <Route path={`/search`} element={<Layout><SearchResult/></Layout>} />
+      <Route path={`/search-area`} element={<Layout><SearchByArea/></Layout>} />
       <Route path=  "*" element={<h1 className='text-center mt-20 text-5xl  text-red-700'>404 Page Not found</h1>} />
      </Routes>
-     <Footer />
      </FavoritesProvider>
     </BrowserRouter>
   )

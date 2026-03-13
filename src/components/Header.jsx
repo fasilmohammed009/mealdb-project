@@ -42,6 +42,7 @@ const Header = () => {
           <Link to="/">Categories</Link>
           <Link to="/favorites">Favorites</Link>
           <Link to="/search-area">Search By Area</Link>
+          <Link to="/user-details">User Details</Link>
         </div>
 
         {/* Search Bar */}

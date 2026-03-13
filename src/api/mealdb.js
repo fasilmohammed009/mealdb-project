@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "https://www.themealdb.com/api/json/v1/1";
+const BASE_URL = import.meta.env.VITE_BASE_URL_BACKEND;
 
 export const fetchCategories = () => axios.get(`${BASE_URL}/categories.php`);
 export const fetchMealsByCategory = (cat) => axios.get(`${BASE_URL}/filter.php?c=${cat}`);

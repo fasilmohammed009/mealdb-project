@@ -38,7 +38,7 @@ const Header = () => {
     <header className="bg-emerald-900 text-white p-4 shadow">
       <nav className="max-w-6xl mx-auto flex flex-col sm:flex-row gap-4 items-center justify-between">
         <div className="flex items-center gap-6">
-          <Link to="/" className="text-xl font-bold">Meal DB</Link>
+          <Link to="/" className="text-xl font-bold">Faya Cafe</Link>
           <Link to="/">Categories</Link>
           <Link to="/favorites">Favorites</Link>
           <Link to="/search-area">Search By Area</Link>

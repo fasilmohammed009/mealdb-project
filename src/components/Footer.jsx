@@ -38,8 +38,8 @@ const Footer = () => {
 
         {/* Brand */}
         <div className="space-y-3">
-          <h2 className="text-4xl font-extrabold tracking-wide drop-shadow-md">
-            <span className="text-emerald-300 animate-pulse">Meal</span> DB
+          <h2 className="text-4xl font-extrabold tracking-wide drop-shadow-md cursor-pointer" onClick={goTop}>
+            <span className="text-emerald-300 animate-pulse" >Fas</span> Cafe
           </h2>
           <p className="text-sm opacity-90">
             Explore your favorite meals worldwide 🍽️
